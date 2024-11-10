@@ -1,0 +1,2 @@
+#!/bin/bash
+g++ joypad.cpp -I. $(pkg-config --cflags --libs libevdev) -o joypad

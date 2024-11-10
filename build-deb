@@ -1,0 +1,30 @@
+#!/bin/bash
+VERSION=0.1.0
+RELEASENUMBER=1 #only increse temporary if fix touches only deb/DEBIAN
+ARCH=$(dpkg --print-architecture)
+
+echo "[0%] Compiling ..."
+./build-bin
+rm -rf deb
+
+echo "[25%] Copying files"
+mkdir -p deb/DEBIAN
+mkdir -p deb/usr/sbin
+mkdir -p deb/lib/systemd/system
+
+cp -v debian/* deb/DEBIAN/
+cp -v joypad deb/usr/sbin/joypad
+cp -v joypad.service deb/lib/systemd/system/joypad.service
+
+echo "[50%] Updating package info"
+echo version $VERSION
+echo arch $ARCH
+
+sed -i "s/VERSION/${VERSION}/g" deb/DEBIAN/control
+sed -i "s/ARCH/${ARCH}/g" deb/DEBIAN/control
+
+echo "[75%] Building package"
+dpkg-deb --build deb
+
+mv deb.deb joypad-x55-${VERSION}-${RELEASENUMBER}_${ARCH}.deb -v
+echo "[100%] done"

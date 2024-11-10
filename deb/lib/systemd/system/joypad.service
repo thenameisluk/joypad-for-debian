@@ -1,0 +1,12 @@
+[Unit]
+Description=checks if linux versions switch went well
+After=multi-user.target
+
+[Service]
+ExecStart=/usr/sbin/joypad
+
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
