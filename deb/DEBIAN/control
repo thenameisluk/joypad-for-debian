@@ -1,6 +1,0 @@
-Package: joypad-x55
-Version: 0.1.0
-Maintainer: luk<luk@iaml.uk>
-Architecture: arm64
-Depends: libevdev2
-Description: use gamepad buttons to controll mouse and keyboard
