@@ -1,3 +1,4 @@
 #!/bin/bash
-
-systemctl enable --now joypad.service
+echo "reboot your system to start using joypad"
+echo "or run systemctl start joypad.service"
+systemctl enable joypad.service

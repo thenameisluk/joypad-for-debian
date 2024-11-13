@@ -1,5 +1,5 @@
 [Unit]
-Description=checks if linux versions switch went well
+Description=use gamepad buttons to controll mouse and keyboard
 After=multi-user.target
 
 [Service]

@@ -1,3 +1,3 @@
 #!/bin/bash
 
-systemctl disable --now joypad.service
+systemctl disable joypad.service
