@@ -100,8 +100,8 @@ and run **build-deb** script inside the repo
 
 **Q**: How do i get Debian onto x55?
 
-**A**: ask at rocknix discord or wait for [this project](https://github.com/hexdump0815/imagebuilder/issues/209?notification_referrer_id=NT_kwDOBYdcALQxMDUyNTQ3OTc1Mzo5Mjc1Njk5Mg#issuecomment-2460856466) to become reality
+**A**: https://github.com/hexdump0815/imagebuilder/pull/265
 
 **Q**: apt repo?
 
-**A**: Comming soon?
+**A**: yeah https://gitlab.com/velvet-os/velvet-repo ```sudo apt install joypad-x55```
