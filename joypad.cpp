@@ -47,9 +47,9 @@ void kandleKeyFields(input_event &ev)
     if (ev.code == ABS_X)
     {
         mXIndex = 1;
-        if (value < 400)
+        if (value < 350)
             mXIndex = 0;
-        if (value > 600)
+        if (value > 650)
             mXIndex = 2;
 
         printf("X %d : %d\n", mXIndex, value);
@@ -58,9 +58,9 @@ void kandleKeyFields(input_event &ev)
     if (ev.code == ABS_Y)
     {
         mYIndex = 1;
-        if (value < 400)
+        if (value < 350)
             mYIndex = 2;
-        if (value > 600)
+        if (value > 650)
             mYIndex = 0;
         printf("Y %d : %d\n", mYIndex, value);
     }
