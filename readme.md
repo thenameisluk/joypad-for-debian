@@ -35,7 +35,7 @@ A W|D R|G Y
  S | F | H
 -----------
  . | 1 | U 
-5 ,|3 2|J I
+5 ,|4 2|J I
  ? | 3 | K 
 -----------
  N | Z | O 
@@ -45,11 +45,11 @@ A W|D R|G Y
 _Note. numbers indicate special keys_
 
 special keys:
-1 - capslock
-2 - space
-3 - enter
-4 - backspace
-5 - meta/windows key
+1.  capslock
+2.  space
+3.  enter
+4.  backspace
+5.  meta/windows key
 
 ### toggling it
 
