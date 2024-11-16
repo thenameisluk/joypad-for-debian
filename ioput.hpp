@@ -157,47 +157,50 @@ public:
     void move(int32_t x, int32_t y)
     {
         if (x)
-            libevdev_uinput_write_event(uidev, EV_REL, REL_X, x);
+            write_event(EV_REL, REL_X, x);
         if (y)
-            libevdev_uinput_write_event(uidev, EV_REL, REL_Y, y);
+            write_event(EV_REL, REL_Y, y);
         sync();
     }
     //assignes buttons state
     //remember to run sync after in order to not introduce any issues
     void leftPress(int state)
     {
-        libevdev_uinput_write_event(uidev, EV_KEY, BTN_LEFT, state);
+        write_event(EV_KEY, BTN_LEFT, state);
     }
     void midlePress(int state)
     {
-        libevdev_uinput_write_event(uidev, EV_KEY, BTN_MIDDLE, state);
+        write_event(EV_KEY, BTN_MIDDLE, state);
     }
     void rightPress(int state)
     {
-        libevdev_uinput_write_event(uidev, EV_KEY, BTN_RIGHT, state);
+        write_event(EV_KEY, BTN_RIGHT, state);
     }
     //clicks button
     void leftClick()
     {
-        libevdev_uinput_write_event(uidev, EV_KEY, BTN_LEFT, 1);
-        libevdev_uinput_write_event(uidev, EV_KEY, BTN_LEFT, 0);
+        write_event(EV_KEY, BTN_LEFT, 1);
+        write_event(EV_KEY, BTN_LEFT, 0);
         sync();
     }
     void midleClick()
     {
-        libevdev_uinput_write_event(uidev, EV_KEY, BTN_MIDDLE, 1);
-        libevdev_uinput_write_event(uidev, EV_KEY, BTN_MIDDLE, 0);
+        write_event(EV_KEY, BTN_MIDDLE, 1);
+        write_event(EV_KEY, BTN_MIDDLE, 0);
         sync();
     }
     void rightClick()
     {
-        libevdev_uinput_write_event(uidev, EV_KEY, BTN_RIGHT, 1);
-        libevdev_uinput_write_event(uidev, EV_KEY, BTN_RIGHT, 0);
+        write_event(EV_KEY, BTN_RIGHT, 1);
+        write_event(EV_KEY, BTN_RIGHT, 0);
         sync();
+    }
+    void write_event(unsigned int type, unsigned int code, int value){
+        libevdev_uinput_write_event(uidev,type,code,value);
     }
     void sync()
     {
-        libevdev_uinput_write_event(uidev, EV_SYN, SYN_REPORT, 0);
+        write_event(EV_SYN, SYN_REPORT, 0);
     }
 };
 
@@ -232,18 +235,21 @@ public:
     //remember to run sync after in order to not introduce any issues
     void press(uint32_t key,int state)
     {
-        libevdev_uinput_write_event(uidev, EV_KEY, key, state);
+        write_event(EV_KEY, key, state);
     }
     //clicks button
     void click(uint32_t key)
     {
-        libevdev_uinput_write_event(uidev, EV_KEY, key, 1);
-        libevdev_uinput_write_event(uidev, EV_KEY, key, 0);
+        write_event(EV_KEY, key, 1);
+        write_event(EV_KEY, key, 0);
         sync();
+    }
+    void write_event(unsigned int type, unsigned int code, int value){
+        libevdev_uinput_write_event(uidev,type,code,value);
     }
     void sync()
     {
-        libevdev_uinput_write_event(uidev, EV_SYN, SYN_REPORT, 0);
+        write_event(EV_SYN, SYN_REPORT, 0);
     }
 };
 
@@ -309,17 +315,20 @@ public:
     //remember to run sync after in order to not introduce any issues
     void press(uint32_t key,int state)
     {
-        libevdev_uinput_write_event(uidev, EV_KEY, key, state);
+        write_event(EV_KEY, key, state);
     }
     //clicks button
     void click(uint32_t key)
     {
-        libevdev_uinput_write_event(uidev, EV_KEY, key, 1);
-        libevdev_uinput_write_event(uidev, EV_KEY, key, 0);
+        write_event(EV_KEY, key, 1);
+        write_event(EV_KEY, key, 0);
         sync();
+    }
+    void write_event(unsigned int type, unsigned int code, int value){
+        libevdev_uinput_write_event(uidev,type,code,value);
     }
     void sync()
     {
-        libevdev_uinput_write_event(uidev, EV_SYN, SYN_REPORT, 0);
+        write_event(EV_SYN, SYN_REPORT, 0);
     }
 };

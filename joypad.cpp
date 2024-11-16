@@ -2,9 +2,11 @@
 
 virtualMouse mouse;
 virtualKeyboard keyboard;
+virtualGamepad gamepad;
 
 inputDevice inabs("/dev/input/event1");
 inputDevice incon("/dev/input/event3");
+inputDevice invol("/dev/input/event4");
 
 int32_t lastx = 0;
 int32_t lasty = 0;
@@ -163,17 +165,17 @@ void handleABS(input_event &ev)
     }
 }
 
-bool start_btn = false;
-bool select_btn = false;
+bool vUp_btn = false;
+bool vDown_btn = false;
 
 void handleToggle(input_event &ev)
 {
-    if (ev.code == BTN_START)
-        start_btn = ev.value;
-    if (ev.code == BTN_SELECT)
-        select_btn = ev.value;
+    if (ev.code == KEY_VOLUMEDOWN)
+        vUp_btn = ev.value;
+    if (ev.code == KEY_VOLUMEUP)
+        vDown_btn = ev.value;
 
-    if (start_btn && select_btn)
+    if (vUp_btn && vDown_btn)
     {
         if (!tgd)
         {
@@ -184,6 +186,14 @@ void handleToggle(input_event &ev)
     }
     else
         tgd = false;
+}
+
+void forwardGamepad(unsigned int type, unsigned int code, int value)
+{
+    if (type == EV_ABS && (code == ABS_RY || code == ABS_Y))
+        value = 1000 - value; // for whatever reason the y axis are swapper
+
+    gamepad.write_event(type, code, value);
 }
 
 int main()
@@ -197,6 +207,9 @@ int main()
 
         while (inabs.manPull(ev) == 0)
         {
+            if (!enable)
+                forwardGamepad(ev.type, ev.code, ev.value);
+
             if (ev.type == EV_ABS)
             {
                 if (enable)
@@ -206,12 +219,18 @@ int main()
 
         while (incon.manPull(ev) == 0)
         {
+            if (!enable)
+                forwardGamepad(ev.type, ev.code, ev.value);
+
+            if (enable && ev.type == EV_KEY)
+                handleCont(ev);
+        }
+
+        while (invol.manPull(ev) == 0)
+        {
             if (ev.type == EV_KEY)
             {
                 handleToggle(ev);
-
-                if (enable)
-                    handleCont(ev);
             }
         }
 

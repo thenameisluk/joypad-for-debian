@@ -53,7 +53,7 @@ special keys:
 
 ### toggling it
 
-by pressing select and start at the same time you can enable and disable the mapper, usefull for playing games
+by pressing volume up and down at the same time you can enable and disable the mapper, usefull for playing games
 
 have fun and share you feed back <3
 
