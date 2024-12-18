@@ -1,18 +1,12 @@
 #include <ioput.hpp>
+#include <joypad.hpp>
 
 virtualMouse mouse;
 virtualKeyboard keyboard;
 virtualGamepad gamepad;
 
-inputDevice inabs("/dev/input/event1");
-inputDevice incon("/dev/input/event3");
-inputDevice invol("/dev/input/event4");
-
 int32_t lastx = 0;
 int32_t lasty = 0;
-
-bool enable = true;
-bool tgd = false;
 
 uint8_t matrixMap[3][3] = {
     {1, 2, 3},
@@ -42,6 +36,10 @@ int32_t keyMatrix[9][4] = {
 
 uint8_t mXIndex = 0;
 uint8_t mYIndex = 0;
+
+void handleMouse(){
+    mouse.move(lastx, lasty);
+}
 void kandleKeyFields(input_event &ev)
 {
     uint32_t value = ev.value;
@@ -154,89 +152,18 @@ void handleABS(input_event &ev)
         lasty = 0;
 
         if (ev.value >= 600)
-            lasty = -1;
+            lasty = 1;
         if (ev.value >= 900)
-            lasty = -4;
+            lasty = 4;
 
         if (ev.value <= 400)
-            lasty = 1;
+            lasty = -1;
         if (ev.value <= 100)
-            lasty = 4;
+            lasty = -4;
     }
-}
-
-bool vUp_btn = false;
-bool vDown_btn = false;
-
-void handleToggle(input_event &ev)
-{
-    if (ev.code == KEY_VOLUMEDOWN)
-        vUp_btn = ev.value;
-    if (ev.code == KEY_VOLUMEUP)
-        vDown_btn = ev.value;
-
-    if (vUp_btn && vDown_btn)
-    {
-        if (!tgd)
-        {
-            enable = !enable;
-
-            tgd = true;
-        }
-    }
-    else
-        tgd = false;
 }
 
 void forwardGamepad(unsigned int type, unsigned int code, int value)
 {
-    if (type == EV_ABS && (code == ABS_RY || code == ABS_Y))
-        value = 1000 - value; // for whatever reason the y axis are swapper
-
     gamepad.write_event(type, code, value);
-}
-
-int main()
-{
-
-    input_event ev;
-
-    while (true)
-    {
-        usleep(6400);
-
-        while (inabs.manPull(ev) == 0)
-        {
-            if (!enable)
-                forwardGamepad(ev.type, ev.code, ev.value);
-
-            if (ev.type == EV_ABS)
-            {
-                if (enable)
-                    handleABS(ev);
-            }
-        }
-
-        while (incon.manPull(ev) == 0)
-        {
-            if (!enable)
-                forwardGamepad(ev.type, ev.code, ev.value);
-
-            if (enable && ev.type == EV_KEY)
-                handleCont(ev);
-        }
-
-        while (invol.manPull(ev) == 0)
-        {
-            if (ev.type == EV_KEY)
-            {
-                handleToggle(ev);
-            }
-        }
-
-        if (enable)
-        {
-            mouse.move(lastx, lasty);
-        }
-    }
 }

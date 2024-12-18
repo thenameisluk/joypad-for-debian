@@ -1,8 +1,8 @@
-# Joypad x55
+# Joypad for debian
 
-Let's you use x55 gamepad buttons and joysticks like keyboard and mouse
+Let's you use gamepad buttons and joysticks like keyboard and mouse
 
-So you can use your x55 as desktop machine too
+So you can use your consoleas desktop machine too
 
 ### Move your mouse
 ![move](./assets/move.gif)

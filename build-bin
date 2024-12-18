@@ -1,5 +1,5 @@
 #!/bin/bash
-g++ joypad.cpp -I. $(pkg-config --cflags --libs libevdev) -o2 -o joypad # -emain -static the world isn't ready for it
+g++ main.cpp joypad.cpp config.cpp -I. $(pkg-config --cflags --libs libevdev) -o2 -o joypad # -emain -static the world isn't ready for it
 
 #-emain removes std bloat
 #-o2 optimization

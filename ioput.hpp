@@ -1,3 +1,4 @@
+#pragma once
 /*
 Usefull wrapper around libevdev for C++
 Feel free to use in your own project
