@@ -84,8 +84,8 @@ void x55()
 }
 void rg552()
 {
-    inputDevice inabs("/dev/input/event1");
-    inputDevice incon("/dev/input/event3");
+    inputDevice inabs("/dev/input/event3");
+    inputDevice incon("/dev/input/event6");
     inputDevice invol("/dev/input/event4");
 
     input_event ev;
@@ -96,6 +96,9 @@ void rg552()
 
         while (inabs.manPull(ev) == 0)
         {
+            if (ev.type == EV_ABS && (ev.code == ABS_Y))
+                    ev.value = - ev.value;
+
             if (!enable)
                 forwardGamepad(ev.type, ev.code, ev.value);
 
@@ -108,8 +111,6 @@ void rg552()
 
         while (incon.manPull(ev) == 0)
         {
-            if (ev.type == EV_ABS && (ev.code == ABS_RY || ev.code == ABS_Y))
-                    ev.value = 1000 - ev.value; // for whatever reason the y axis are swapper
             
             if (!enable){
                 forwardGamepad(ev.type, ev.code, ev.value);
@@ -136,18 +137,25 @@ void rg552()
 }
 
 int main(int argc, char *argv[]){
-
-    if(config["device"]=="x55"){
+    if(config["device"]=="x55"){//device=x55
         std::cout << "Device : x55" << std::endl;
         x55();
         return 0;   
     }
 
-    if(config["device"]=="rg552"){
+    if(config["device"]=="rg552"){//device=rg552
         std::cout << "Device : x552" << std::endl;
         rg552();
         return 0;
     }
+    
 
     std::cout << "unknown device" << std::endl;
+    std::cout << "please put:" << std::endl;
+    std::cout << "device=<device>" << std::endl;
+    std::cout << "inside /etc/joypad.conf" << std::endl;
+    std::cout << "supported devices:" << std::endl;
+    std::cout << "\"x55\" - powkiddy x55" << std::endl;
+    std::cout << "\"rg552\" - anbernic rg552" << std::endl;
+
 }

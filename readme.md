@@ -4,6 +4,10 @@ Let's you use gamepad buttons and joysticks like keyboard and mouse
 
 So you can use your consoleas desktop machine too
 
+Currently supporting :
+- powkiddy x55
+- anbernic rg552
+
 ### Move your mouse
 ![move](./assets/move.gif)
 
@@ -77,6 +81,10 @@ in ```joypad.cpp``` to correct ones should fix the issue
 otherwise you might need to slight rearrange the code, ```evtest``` should help with adjustments
 
 _Remember. don't make issue about other devices not working_
+
+**Q** joypad doesn't work on my supported deive
+
+**A** make sure you have specified your device inside ```/etc/joypad.conf``` (also look main() in main.cpp)
 
 **Q**: Will it work on regular gamepad?
 

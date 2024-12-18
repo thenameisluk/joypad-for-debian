@@ -3,21 +3,27 @@
 #include <fstream>
 
 std::map<std::string,std::string> getConfig(){
+    std::map<std::string,std::string> out;
+
     std::ifstream config("/etc/joypad.conf");
 
     if(!config.is_open()){
         std::cout << "no config at /etc/joypad.conf" << std::endl;
-    }
-    std::string line;
-    std::string a;
-    std::string b;
 
-    std::map<std::string,std::string> out;
+        exit(2);
+    }
+
+    std::string line;
+    std::string a = "";
+    std::string b = "";
 
     std::cout << "Config :" << std::endl;
 
     while(std::getline(config,line)){
         bool key = true;
+        a = "";
+        b = "";
+
         for(int i = 0;i<line.length();i++){
             if(key){
                 if(line.at(i)=='='){
@@ -29,7 +35,9 @@ std::map<std::string,std::string> getConfig(){
                 b+=line.at(i);
             }
         }
-
+        if(key)
+            continue;
+        
         out[a] = b;
         
         std::cout << a << "->" << b << std::endl;

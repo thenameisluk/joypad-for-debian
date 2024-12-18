@@ -29,6 +29,7 @@ OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <string>
 #include <functional>
+#include <stdexcept>
 #include <thread>
 
 #include <stdlib.h>
@@ -148,7 +149,7 @@ public:
                                                  LIBEVDEV_UINPUT_OPEN_MANAGED,
                                                  &uidev);
         if (err != 0)
-            throw std::string("unable to create device");
+            throw std::runtime_error("unable to create device, are you root?");
     }
     ~virtualMouse()
     {
@@ -230,7 +231,7 @@ public:
                                                  LIBEVDEV_UINPUT_OPEN_MANAGED,
                                                  &uidev);
         if (err != 0)
-            throw std::string("unable to create device");
+            throw std::runtime_error("unable to create device, are you root?");
     }
     //assignes buttons state
     //remember to run sync after in order to not introduce any issues
@@ -310,7 +311,7 @@ public:
                                                  LIBEVDEV_UINPUT_OPEN_MANAGED,
                                                  &uidev);
         if (err != 0)
-            throw std::string("unable to create device");
+            throw std::runtime_error("unable to create device, are you root?");
     }
     //assignes buttons state
     //remember to run sync after in order to not introduce any issues
