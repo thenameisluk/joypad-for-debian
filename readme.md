@@ -16,10 +16,14 @@ just use your right joystick
 ### Click
 ![click](./assets/click.gif)
 
+![move](./assets/click-rg552.gif)
+
 by using L1 and R2
 
 ### Type
 ![type](./assets/type.gif)
+
+![type](./assets/type-rg552.gif)
 
 _yes even type_
 

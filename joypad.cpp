@@ -5,8 +5,8 @@ virtualMouse mouse;
 virtualKeyboard keyboard;
 virtualGamepad gamepad;
 
-int32_t lastx = 0;
-int32_t lasty = 0;
+int32_t lastx = 1;
+int32_t lasty = 1;
 
 uint8_t matrixMap[3][3] = {
     {1, 2, 3},
@@ -59,9 +59,9 @@ void kandleKeyFields(input_event &ev)
     {
         mYIndex = 1;
         if (value < 300)
-            mYIndex = 2;
-        if (value > 700)
             mYIndex = 0;
+        if (value > 700)
+            mYIndex = 2;
         printf("Y %d : %d\n", mYIndex, value);
     }
 }

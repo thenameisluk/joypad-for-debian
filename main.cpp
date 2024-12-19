@@ -44,6 +44,9 @@ void x55()
 
         while (inabs.manPull(ev) == 0)
         {
+            if (ev.type == EV_ABS && (ev.code == ABS_RY || ev.code == ABS_Y))
+                    ev.value = 1024 - ev.value; // for whatever reason the y axis are swapper
+
             if (!enable)
                 forwardGamepad(ev.type, ev.code, ev.value);
 
@@ -56,8 +59,6 @@ void x55()
 
         while (incon.manPull(ev) == 0)
         {
-            if (ev.type == EV_ABS && (ev.code == ABS_RY || ev.code == ABS_Y))
-                    ev.value = 1000 - ev.value; // for whatever reason the y axis are swapper
             
             if (!enable){
                 forwardGamepad(ev.type, ev.code, ev.value);
@@ -96,12 +97,16 @@ void rg552()
 
         while (inabs.manPull(ev) == 0)
         {
-            if (ev.type == EV_ABS && (ev.code == ABS_Y))
-                    ev.value = - ev.value;
 
-            if (!enable)
+            if (ev.type == EV_ABS && (ev.code == ABS_X || ev.code == ABS_Y))
+                    ev.value = 1024 - ev.value;
+
+            if (!enable){
+                inputEvent(ev).print();
                 forwardGamepad(ev.type, ev.code, ev.value);
 
+            }
+                
             if (ev.type == EV_ABS)
             {
                 if (enable)
