@@ -5,8 +5,8 @@ virtualMouse mouse;
 virtualKeyboard keyboard;
 virtualGamepad gamepad;
 
-int32_t lastx = 1;
-int32_t lasty = 1;
+int32_t lastx = 0;
+int32_t lasty = 0;
 
 uint8_t matrixMap[3][3] = {
     {1, 2, 3},

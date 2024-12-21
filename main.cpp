@@ -85,9 +85,9 @@ void x55()
 }
 void rg552()
 {
-    inputDevice inabs("/dev/input/event3");
-    inputDevice incon("/dev/input/event6");
-    inputDevice invol("/dev/input/event4");
+    inputDevice inabs("/dev/input/event4");
+    inputDevice incon("/dev/input/event7");
+    inputDevice invol("/dev/input/event5");
 
     input_event ev;
 
