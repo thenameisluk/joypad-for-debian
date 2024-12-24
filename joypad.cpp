@@ -1,17 +1,18 @@
 #include <ioput.hpp>
 #include <joypad.hpp>
+#include <iostream>
+#include <cmath>
 
 virtualMouse mouse;
 virtualKeyboard keyboard;
 virtualGamepad gamepad;
 
+// setting env DEBUG to any value will trigger debbuging mode
+bool debuging = (bool)std::getenv("DEBUG");
+
 int32_t lastx = 0;
 int32_t lasty = 0;
 
-uint8_t matrixMap[3][3] = {
-    {1, 2, 3},
-    {8, 0, 4},
-    {7, 6, 5}};
 int32_t keyMatrix[9][4] = {
     /*
     x a b y
@@ -37,33 +38,105 @@ int32_t keyMatrix[9][4] = {
 uint8_t mXIndex = 0;
 uint8_t mYIndex = 0;
 
-void handleMouse(){
+void handleMouse()
+{
     mouse.move(lastx, lasty);
 }
+
+int32_t x = 500;
+int32_t y = 500;
+int32_t keyIndex = 0;
+float rad = 0;
+float degree = 0;
+float dist = 0;
+
+//make sure the ABS values are withing range of 0 to 1024
+//and virtual-gamepad with this values looks correct in any
+//gamepad testing program (x or y 's not inverted)
 void kandleKeyFields(input_event &ev)
 {
     uint32_t value = ev.value;
 
     if (ev.code == ABS_X)
     {
-        mXIndex = 1;
-        if (value < 300)
-            mXIndex = 0;
-        if (value > 700)
-            mXIndex = 2;
-
-        printf("X %d : %d\n", mXIndex, value);
+        x = value;
     }
-
-    if (ev.code == ABS_Y)
+    else if (ev.code == ABS_Y)
     {
-        mYIndex = 1;
-        if (value < 300)
-            mYIndex = 0;
-        if (value > 700)
-            mYIndex = 2;
-        printf("Y %d : %d\n", mYIndex, value);
+        y = value;
     }
+    else
+        return;
+
+    // calculating degree
+    float posx = -512 + x;
+    float posy = 512 - y;
+
+    if (x == 0 && y == 0)
+        return;
+
+    dist = sqrt((posx * posx) + (posy * posy));
+
+    rad = asin(posy / dist);
+
+    if (posx < 0)
+    {
+        rad = M_PI - rad;
+    }
+    else if (posy < 0)
+    {
+        rad = (2 * M_PI) + rad;
+    }
+
+    degree = rad * 180.0f / M_PI;
+
+    if (debuging)
+        std::cout << " Degree: " << degree << " Dist: " << dist << std::endl;
+
+    // getting field
+    if (dist < 100)
+    {
+        keyIndex = 0;
+    }
+    else if (degree <= 22.5f)
+    {
+        keyIndex = 4;
+    }
+    else if (degree <= 22.5f + (45.0f * 1.0f))
+    {
+        keyIndex = 3;
+    }
+    else if (degree <= 22.5f + (45.0f * 2.0f))
+    {
+        keyIndex = 2;
+    }
+    else if (degree <= 22.5f + (45.0f * 3.0f))
+    {
+        keyIndex = 1;
+    }
+    else if (degree <= 22.5f + (45.0f * 4.0f))
+    {
+        keyIndex = 8;
+    }
+    else if (degree <= 22.5f + (45.0f * 5.0f))
+    {
+        keyIndex = 7;
+    }
+    else if (degree <= 22.5f + (45.0f * 6.0f))
+    {
+        keyIndex = 6;
+    }
+    else if (degree <= 22.5f + (45.0f * 7.0f))
+    {
+        keyIndex = 5;
+    }
+    else
+    {
+        keyIndex = 4;
+    }
+
+    if (debuging)
+        std::cout << "Index: " << keyIndex << std::endl;
 }
 
 void handleCont(input_event &ev)
@@ -83,24 +156,21 @@ void handleCont(input_event &ev)
         printf("right %d\n", ev.value);
     }
 
-    printf("x %d y %d\n", mXIndex, mYIndex);
-    int32_t index = matrixMap[mYIndex][mXIndex];
-
     if (ev.value == 1)
     {
         switch (ev.code)
         {
         case BTN_NORTH:
-            keyboard.click(keyMatrix[index][0]);
+            keyboard.click(keyMatrix[keyIndex][0]);
             break;
         case BTN_EAST:
-            keyboard.click(keyMatrix[index][1]);
+            keyboard.click(keyMatrix[keyIndex][1]);
             break;
         case BTN_SOUTH:
-            keyboard.click(keyMatrix[index][2]);
+            keyboard.click(keyMatrix[keyIndex][2]);
             break;
         case BTN_WEST:
-            keyboard.click(keyMatrix[index][3]);
+            keyboard.click(keyMatrix[keyIndex][3]);
             break;
         case BTN_DPAD_UP:
             keyboard.click(KEY_UP);

@@ -1,5 +1,5 @@
 #!/bin/bash
-VERSION=0.1.6
+VERSION=0.1.7
 RELEASENUMBER=1 #only increse temporary if fix touches only deb/DEBIAN
 ARCH=$(dpkg --print-architecture)
 
