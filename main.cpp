@@ -32,9 +32,9 @@ void handleToggle(input_event &ev)
 
 void x55()
 {
-    inputDevice inabs("/dev/input/event1");
-    inputDevice incon("/dev/input/event3");
-    inputDevice invol("/dev/input/event4");
+    inputDevice inabs("/dev/input/event1",true);
+    inputDevice incon("/dev/input/event3",true);
+    inputDevice invol("/dev/input/event4",true);
 
     input_event ev;
 
@@ -85,9 +85,9 @@ void x55()
 }
 void rg552()
 {
-    inputDevice inabs("/dev/input/event4");
-    inputDevice incon("/dev/input/event7");
-    inputDevice invol("/dev/input/event5");
+    inputDevice inabs("/dev/input/event4",true);
+    inputDevice incon("/dev/input/event7",true);
+    inputDevice invol("/dev/input/event5",true);
 
     input_event ev;
 

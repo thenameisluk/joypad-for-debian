@@ -3,9 +3,9 @@
 #include <iostream>
 #include <cmath>
 
-virtualMouse mouse;
-virtualKeyboard keyboard;
-virtualGamepad gamepad;
+virtualMouse mouse = virtualMouse();
+virtualKeyboard keyboard = virtualKeyboard();
+virtualGamepad gamepad = virtualGamepad();
 
 // setting env DEBUG to any value will trigger debbuging mode
 bool debuging = (bool)std::getenv("DEBUG");
