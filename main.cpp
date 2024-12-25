@@ -32,9 +32,9 @@ void handleToggle(input_event &ev)
 
 void x55()
 {
-    inputDevice inabs("/dev/input/event1",true);
-    inputDevice incon("/dev/input/event3",true);
-    inputDevice invol("/dev/input/event4",true);
+    inputDevice inabs("/dev/input/event1", true);
+    inputDevice incon("/dev/input/event3", true);
+    inputDevice invol("/dev/input/event4", true);
 
     input_event ev;
 
@@ -45,7 +45,7 @@ void x55()
         while (inabs.manPull(ev) == 0)
         {
             if (ev.type == EV_ABS && (ev.code == ABS_RY || ev.code == ABS_Y))
-                    ev.value = 1024 - ev.value; // for whatever reason the y axis are swapper
+                ev.value = 1024 - ev.value; // for whatever reason the y axis are swapper
 
             if (!enable)
                 forwardGamepad(ev.type, ev.code, ev.value);
@@ -59,11 +59,13 @@ void x55()
 
         while (incon.manPull(ev) == 0)
         {
-            
-            if (!enable){
+            if (ev.code == BTN_THUMB2)
+                ev.code = BTN_THUMBR;
+
+            if (!enable)
+            {
                 forwardGamepad(ev.type, ev.code, ev.value);
             }
-                
 
             if (enable && ev.type == EV_KEY)
                 handleCont(ev);
@@ -85,9 +87,9 @@ void x55()
 }
 void rg552()
 {
-    inputDevice inabs("/dev/input/event4",true);
-    inputDevice incon("/dev/input/event7",true);
-    inputDevice invol("/dev/input/event5",true);
+    inputDevice inabs("/dev/input/event4", true);
+    inputDevice incon("/dev/input/event7", true);
+    inputDevice invol("/dev/input/event5", true);
 
     input_event ev;
 
@@ -99,14 +101,14 @@ void rg552()
         {
 
             if (ev.type == EV_ABS && (ev.code == ABS_X || ev.code == ABS_Y))
-                    ev.value = 1024 - ev.value;
+                ev.value = 1024 - ev.value;
 
-            if (!enable){
+            if (!enable)
+            {
                 inputEvent(ev).print();
                 forwardGamepad(ev.type, ev.code, ev.value);
-
             }
-                
+
             if (ev.type == EV_ABS)
             {
                 if (enable)
@@ -116,11 +118,11 @@ void rg552()
 
         while (incon.manPull(ev) == 0)
         {
-            
-            if (!enable){
+
+            if (!enable)
+            {
                 forwardGamepad(ev.type, ev.code, ev.value);
             }
-                
 
             if (enable && ev.type == EV_KEY)
                 handleCont(ev);
@@ -141,19 +143,21 @@ void rg552()
     }
 }
 
-int main(int argc, char *argv[]){
-    if(config["device"]=="x55"){//device=x55
+int main(int argc, char *argv[])
+{
+    if (config["device"] == "x55")
+    { // device=x55
         std::cout << "Device : x55" << std::endl;
         x55();
-        return 0;   
+        return 0;
     }
 
-    if(config["device"]=="rg552"){//device=rg552
+    if (config["device"] == "rg552")
+    { // device=rg552
         std::cout << "Device : x552" << std::endl;
         rg552();
         return 0;
     }
-    
 
     std::cout << "unknown device" << std::endl;
     std::cout << "please put:" << std::endl;
@@ -162,5 +166,4 @@ int main(int argc, char *argv[]){
     std::cout << "supported devices:" << std::endl;
     std::cout << "\"x55\" - powkiddy x55" << std::endl;
     std::cout << "\"rg552\" - anbernic rg552" << std::endl;
-
 }

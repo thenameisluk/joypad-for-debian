@@ -235,5 +235,13 @@ void handleABS(input_event &ev)
 
 void forwardGamepad(unsigned int type, unsigned int code, int value)
 {
+    if(debuging){
+        input_event ev;
+        ev.type = type;
+        ev.code = code;
+        ev.value = value;
+
+        inputEvent(ev).print();
+    }
     gamepad.write_event(type, code, value);
 }

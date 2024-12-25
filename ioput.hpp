@@ -128,7 +128,7 @@ public:
     int err;
     struct libevdev *dev;
     struct libevdev_uinput *uidev;
-    virtualMouse(const char* name = "virtual mouse")
+    virtualMouse(const char* name = "virtual-mouse")
     {
         dev = libevdev_new();
         libevdev_set_id_vendor(dev,0);
@@ -212,7 +212,7 @@ public:
     int err;
     struct libevdev *dev;
     struct libevdev_uinput *uidev;
-    virtualKeyboard(const char* name = "virtual keyboard")
+    virtualKeyboard(const char* name = "virtual-keyboard")
     {
         dev = libevdev_new();
         libevdev_set_id_vendor(dev,0);
@@ -261,11 +261,11 @@ public:
     int err;
     struct libevdev *dev;
     struct libevdev_uinput *uidev;
-    virtualGamepad(const char* name = "virtual gamepad",int32_t joymin = 0,int32_t joymax = 1000)
+    virtualGamepad(const char* name = "virtual-gamepad",int32_t joymin = 0,int32_t joymax = 1024)
     {
         dev = libevdev_new();
-        libevdev_set_id_vendor(dev,0);
-        libevdev_set_id_product(dev,0);
+        libevdev_set_id_vendor(dev,4392);//completly random
+        libevdev_set_id_product(dev,3875);
         libevdev_set_name(dev, name);
 
         libevdev_enable_event_type(dev, EV_SYN);
@@ -285,18 +285,19 @@ public:
         //joysticks
         input_absinfo abs_info;
         abs_info.flat = 10;
-        abs_info.fuzz = 0;
+        abs_info.fuzz = 16;
         abs_info.value = 0;
         abs_info.minimum = joymin;//default 0
         abs_info.maximum = joymax;//default 1000
         abs_info.resolution = 0;
+        libevdev_enable_event_type(dev, EV_ABS);
         libevdev_enable_event_code(dev, EV_ABS, ABS_X, &abs_info);
         libevdev_enable_event_code(dev, EV_ABS, ABS_Y, &abs_info);
         libevdev_enable_event_code(dev, EV_ABS, ABS_RX, &abs_info);
         libevdev_enable_event_code(dev, EV_ABS, ABS_RY, &abs_info);
         //joystick btn
         libevdev_enable_event_code(dev, EV_KEY, BTN_THUMBL, NULL);
-        libevdev_enable_event_code(dev, EV_KEY, BTN_THUMB2, NULL);
+        libevdev_enable_event_code(dev, EV_KEY, BTN_THUMBR, NULL);
         //trigger
         libevdev_enable_event_code(dev, EV_KEY, BTN_TR, NULL);
         libevdev_enable_event_code(dev, EV_KEY, BTN_TR2, NULL);
@@ -305,7 +306,7 @@ public:
         //menu
         libevdev_enable_event_code(dev, EV_KEY, BTN_START, NULL);
         libevdev_enable_event_code(dev, EV_KEY, BTN_SELECT, NULL);
-        libevdev_enable_event_code(dev, EV_KEY, BTN_MODE, NULL);
+        // libevdev_enable_event_code(dev, EV_KEY, BTN_MODE, NULL); some devices don't have
 
         err = libevdev_uinput_create_from_device(dev,
                                                  LIBEVDEV_UINPUT_OPEN_MANAGED,
