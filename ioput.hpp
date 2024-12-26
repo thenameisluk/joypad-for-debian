@@ -31,6 +31,7 @@ OR OTHER DEALINGS IN THE SOFTWARE.
 #include <functional>
 #include <stdexcept>
 #include <thread>
+#include <sys/stat.h>
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -78,7 +79,11 @@ public:
     inputDevice(const char *path, bool blocking = false)
     {
         fd = open(path, O_RDONLY | O_NONBLOCK);
+
         rc = libevdev_new_from_fd(fd, &dev);
+        
+        if(blocking)
+            libevdev_grab(dev,libevdev_grab_mode::LIBEVDEV_GRAB);
 
         if (rc < 0)
         {
@@ -128,11 +133,11 @@ public:
     int err;
     struct libevdev *dev;
     struct libevdev_uinput *uidev;
-    virtualMouse(const char* name = "virtual-mouse")
+    virtualMouse(const char *name = "virtual-mouse")
     {
         dev = libevdev_new();
-        libevdev_set_id_vendor(dev,0);
-        libevdev_set_id_product(dev,0);
+        libevdev_set_id_vendor(dev, 0);
+        libevdev_set_id_product(dev, 0);
         libevdev_set_name(dev, name);
 
         libevdev_enable_event_type(dev, EV_SYN);
@@ -140,6 +145,7 @@ public:
         libevdev_enable_event_type(dev, EV_REL);
         libevdev_enable_event_code(dev, EV_REL, REL_X, NULL);
         libevdev_enable_event_code(dev, EV_REL, REL_Y, NULL);
+        libevdev_enable_event_code(dev, EV_REL, REL_WHEEL, NULL);
         libevdev_enable_event_type(dev, EV_KEY);
         libevdev_enable_event_code(dev, EV_KEY, BTN_LEFT, NULL);
         libevdev_enable_event_code(dev, EV_KEY, BTN_MIDDLE, NULL);
@@ -164,8 +170,13 @@ public:
             write_event(EV_REL, REL_Y, y);
         sync();
     }
-    //assignes buttons state
-    //remember to run sync after in order to not introduce any issues
+    void scroll(int32_t value){
+        if(value)
+            write_event(EV_REL,REL_WHEEL,value);
+        sync();
+    }
+    // assignes buttons state
+    // remember to run sync after in order to not introduce any issues
     void leftPress(int state)
     {
         write_event(EV_KEY, BTN_LEFT, state);
@@ -178,7 +189,7 @@ public:
     {
         write_event(EV_KEY, BTN_RIGHT, state);
     }
-    //clicks button
+    // clicks button
     void leftClick()
     {
         write_event(EV_KEY, BTN_LEFT, 1);
@@ -197,8 +208,9 @@ public:
         write_event(EV_KEY, BTN_RIGHT, 0);
         sync();
     }
-    void write_event(unsigned int type, unsigned int code, int value){
-        libevdev_uinput_write_event(uidev,type,code,value);
+    void write_event(unsigned int type, unsigned int code, int value)
+    {
+        libevdev_uinput_write_event(uidev, type, code, value);
     }
     void sync()
     {
@@ -212,11 +224,11 @@ public:
     int err;
     struct libevdev *dev;
     struct libevdev_uinput *uidev;
-    virtualKeyboard(const char* name = "virtual-keyboard")
+    virtualKeyboard(const char *name = "virtual-keyboard")
     {
         dev = libevdev_new();
-        libevdev_set_id_vendor(dev,0);
-        libevdev_set_id_product(dev,0);
+        libevdev_set_id_vendor(dev, 0);
+        libevdev_set_id_product(dev, 0);
         libevdev_set_name(dev, name);
 
         libevdev_enable_event_type(dev, EV_SYN);
@@ -233,21 +245,22 @@ public:
         if (err != 0)
             throw std::runtime_error("unable to create device, are you root?");
     }
-    //assignes buttons state
-    //remember to run sync after in order to not introduce any issues
-    void press(uint32_t key,int state)
+    // assignes buttons state
+    // remember to run sync after in order to not introduce any issues
+    void press(uint32_t key, int state)
     {
         write_event(EV_KEY, key, state);
     }
-    //clicks button
+    // clicks button
     void click(uint32_t key)
     {
         write_event(EV_KEY, key, 1);
         write_event(EV_KEY, key, 0);
         sync();
     }
-    void write_event(unsigned int type, unsigned int code, int value){
-        libevdev_uinput_write_event(uidev,type,code,value);
+    void write_event(unsigned int type, unsigned int code, int value)
+    {
+        libevdev_uinput_write_event(uidev, type, code, value);
     }
     void sync()
     {
@@ -261,49 +274,49 @@ public:
     int err;
     struct libevdev *dev;
     struct libevdev_uinput *uidev;
-    virtualGamepad(const char* name = "virtual-gamepad",int32_t joymin = 0,int32_t joymax = 1024)
+    virtualGamepad(const char *name = "virtual-gamepad", int32_t joymin = 0, int32_t joymax = 1024)
     {
         dev = libevdev_new();
-        libevdev_set_id_vendor(dev,4392);//completly random
-        libevdev_set_id_product(dev,3875);
+        libevdev_set_id_vendor(dev, 4392); // completly random
+        libevdev_set_id_product(dev, 3875);
         libevdev_set_name(dev, name);
 
         libevdev_enable_event_type(dev, EV_SYN);
         libevdev_enable_event_code(dev, EV_SYN, SYN_REPORT, NULL);
-        //buttons
+        // buttons
         libevdev_enable_event_type(dev, EV_KEY);
         libevdev_enable_event_code(dev, EV_KEY, BTN_GAMEPAD, NULL);
         libevdev_enable_event_code(dev, EV_KEY, BTN_NORTH, NULL);
         libevdev_enable_event_code(dev, EV_KEY, BTN_EAST, NULL);
-        libevdev_enable_event_code(dev, EV_KEY, BTN_SOUTH, NULL);//same as gamepad btn but whatever
+        libevdev_enable_event_code(dev, EV_KEY, BTN_SOUTH, NULL); // same as gamepad btn but whatever
         libevdev_enable_event_code(dev, EV_KEY, BTN_WEST, NULL);
-        //d-pad
+        // d-pad
         libevdev_enable_event_code(dev, EV_KEY, BTN_DPAD_UP, NULL);
         libevdev_enable_event_code(dev, EV_KEY, BTN_DPAD_LEFT, NULL);
         libevdev_enable_event_code(dev, EV_KEY, BTN_DPAD_DOWN, NULL);
         libevdev_enable_event_code(dev, EV_KEY, BTN_DPAD_RIGHT, NULL);
-        //joysticks
+        // joysticks
         input_absinfo abs_info;
         abs_info.flat = 10;
         abs_info.fuzz = 16;
         abs_info.value = 0;
-        abs_info.minimum = joymin;//default 0
-        abs_info.maximum = joymax;//default 1000
+        abs_info.minimum = joymin; // default 0
+        abs_info.maximum = joymax; // default 1000
         abs_info.resolution = 0;
         libevdev_enable_event_type(dev, EV_ABS);
         libevdev_enable_event_code(dev, EV_ABS, ABS_X, &abs_info);
         libevdev_enable_event_code(dev, EV_ABS, ABS_Y, &abs_info);
         libevdev_enable_event_code(dev, EV_ABS, ABS_RX, &abs_info);
         libevdev_enable_event_code(dev, EV_ABS, ABS_RY, &abs_info);
-        //joystick btn
+        // joystick btn
         libevdev_enable_event_code(dev, EV_KEY, BTN_THUMBL, NULL);
         libevdev_enable_event_code(dev, EV_KEY, BTN_THUMBR, NULL);
-        //trigger
+        // trigger
         libevdev_enable_event_code(dev, EV_KEY, BTN_TR, NULL);
         libevdev_enable_event_code(dev, EV_KEY, BTN_TR2, NULL);
         libevdev_enable_event_code(dev, EV_KEY, BTN_TL, NULL);
         libevdev_enable_event_code(dev, EV_KEY, BTN_TL2, NULL);
-        //menu
+        // menu
         libevdev_enable_event_code(dev, EV_KEY, BTN_START, NULL);
         libevdev_enable_event_code(dev, EV_KEY, BTN_SELECT, NULL);
         // libevdev_enable_event_code(dev, EV_KEY, BTN_MODE, NULL); some devices don't have
@@ -314,21 +327,22 @@ public:
         if (err != 0)
             throw std::runtime_error("unable to create device, are you root?");
     }
-    //assignes buttons state
-    //remember to run sync after in order to not introduce any issues
-    void press(uint32_t key,int state)
+    // assignes buttons state
+    // remember to run sync after in order to not introduce any issues
+    void press(uint32_t key, int state)
     {
         write_event(EV_KEY, key, state);
     }
-    //clicks button
+    // clicks button
     void click(uint32_t key)
     {
         write_event(EV_KEY, key, 1);
         write_event(EV_KEY, key, 0);
         sync();
     }
-    void write_event(unsigned int type, unsigned int code, int value){
-        libevdev_uinput_write_event(uidev,type,code,value);
+    void write_event(unsigned int type, unsigned int code, int value)
+    {
+        libevdev_uinput_write_event(uidev, type, code, value);
     }
     void sync()
     {

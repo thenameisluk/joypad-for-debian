@@ -34,7 +34,7 @@ void x55()
 {
     inputDevice inabs("/dev/input/event1", true);
     inputDevice incon("/dev/input/event3", true);
-    inputDevice invol("/dev/input/event4", true);
+    inputDevice invol("/dev/input/event4");
 
     input_event ev;
 
@@ -89,7 +89,7 @@ void rg552()
 {
     inputDevice inabs("/dev/input/event4", true);
     inputDevice incon("/dev/input/event7", true);
-    inputDevice invol("/dev/input/event5", true);
+    inputDevice invol("/dev/input/event5");
 
     input_event ev;
 

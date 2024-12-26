@@ -12,6 +12,8 @@ bool debuging = (bool)std::getenv("DEBUG");
 
 int32_t lastx = 0;
 int32_t lasty = 0;
+bool L2 = false;
+bool R2 = false;
 
 int32_t keyMatrix[9][4] = {
     /*
@@ -38,9 +40,26 @@ int32_t keyMatrix[9][4] = {
 uint8_t mXIndex = 0;
 uint8_t mYIndex = 0;
 
+int scrollTimer = 0;
+
 void handleMouse()
 {
-    mouse.move(lastx, lasty);
+    if (lastx || lasty)
+        mouse.move(lastx, lasty);
+
+    if ((R2 ^ L2)&!scrollTimer)
+    {
+        if (L2)
+        {
+            mouse.scroll(1);
+        }
+        else
+        {
+            mouse.scroll(-1);
+        }
+    }
+    scrollTimer++;
+    scrollTimer%=16;
 }
 
 int32_t x = 500;
@@ -50,9 +69,9 @@ float rad = 0;
 float degree = 0;
 float dist = 0;
 
-//make sure the ABS values are withing range of 0 to 1024
-//and virtual-gamepad with this values looks correct in any
-//gamepad testing program (x or y 's not inverted)
+// make sure the ABS values are withing range of 0 to 1024
+// and virtual-gamepad with this values looks correct in any
+// gamepad testing program (x or y 's not inverted)
 void kandleKeyFields(input_event &ev)
 {
     uint32_t value = ev.value;
@@ -156,6 +175,12 @@ void handleCont(input_event &ev)
         printf("right %d\n", ev.value);
     }
 
+    if (ev.code == BTN_TL2)
+        L2 = ev.value;
+
+    if (ev.code == BTN_TR2)
+        R2 = ev.value;
+
     if (ev.value == 1)
     {
         switch (ev.code)
@@ -235,7 +260,8 @@ void handleABS(input_event &ev)
 
 void forwardGamepad(unsigned int type, unsigned int code, int value)
 {
-    if(debuging){
+    if (debuging)
+    {
         input_event ev;
         ev.type = type;
         ev.code = code;

@@ -16,14 +16,16 @@ just use your right joystick
 ### Click
 ![click](./assets/click.gif)
 
-![move](./assets/click-rg552.gif)
+by using L1 and R1
 
-by using L1 and R2
+### Scroll
+
+![scroll](./assets/scroll-rg552.gif)
+
+by using L2 and R2
 
 ### Type
 ![type](./assets/type.gif)
-
-![type](./assets/type-rg552.gif)
 
 _yes even type_
 
@@ -112,8 +114,8 @@ and run **build-deb** script inside the repo
 
 **Q**: How do i get Debian onto x55?
 
-**A**: https://github.com/hexdump0815/imagebuilder/pull/265
+**A**: https://github.com/hexdump0815/imagebuilder/blob/main/doc/console/readme.md
 
 **Q**: apt repo?
 
-**A**: yeah https://gitlab.com/velvet-os/velvet-repo ```sudo apt install joypad-x55```
+**A**: yeah https://gitlab.com/velvet-os/velvet-repo ```sudo apt install joypad```
